@@ -116,6 +116,24 @@ export const skills = {
   ],
 };
 
+export const education = {
+  institution: "SLIIT",
+  degree: "B.Sc. (Hons) in Information Technology",
+  specialization: "Data Science",
+  cgpa: "3.3",
+  stage: "Third-Year Undergraduate",
+  graduationYear: "2027",
+  coursework: [
+    "Python Programming",
+    "Statistics",
+    "Machine Learning",
+    "Database Management",
+    "Data Warehousing",
+    "Business Intelligence",
+    "Data Visualization",
+  ],
+};
+
 export const projects = [
   {
     id: 1,

@@ -5,7 +5,7 @@ import {
   Sparkles,
   Stars,
 } from "@react-three/drei";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function CoreSphere() {
   const sphereRef = useRef();
@@ -153,21 +153,51 @@ function Scene() {
 }
 
 function DataSphere() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isPageVisible, setIsPageVisible] = useState(true);
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 600px)");
+    const updateMobileState = () => setIsMobile(mobileQuery.matches);
+    const updateVisibility = () => setIsPageVisible(!document.hidden);
+
+    updateMobileState();
+    updateVisibility();
+    mobileQuery.addEventListener("change", updateMobileState);
+    document.addEventListener("visibilitychange", updateVisibility);
+
+    return () => {
+      mobileQuery.removeEventListener("change", updateMobileState);
+      document.removeEventListener("visibilitychange", updateVisibility);
+    };
+  }, []);
+
   return (
     <div className="data-sphere-wrapper">
-        <Canvas
+      <Canvas
         camera={{
-            position: [0, 0, 7],
-            fov: 45,
+          position: [0, 0, 7],
+          fov: 45,
         }}
-        dpr={[1, 1.6]}
+        dpr={isMobile ? [0.75, 1] : [1, 1.6]}
+        frameloop={isPageVisible ? "always" : "never"}
+        performance={{ min: 0.6 }}
         gl={{
-            alpha: true,
-            antialias: true,
+          alpha: true,
+          antialias: !isMobile,
         }}
-        >
+        fallback={<DataSphereFallbackCanvas />}
+      >
         <Scene />
-        </Canvas>
+      </Canvas>
+    </div>
+  );
+}
+
+function DataSphereFallbackCanvas() {
+  return (
+    <div className="data-sphere-canvas-fallback" role="img" aria-label="Data sphere unavailable">
+      <span>DATA CORE</span>
     </div>
   );
 }

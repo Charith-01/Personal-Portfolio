@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { lazy, Suspense } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowDown,
   Download,
@@ -9,10 +10,26 @@ import {
   FaGithub,
   FaLinkedinIn,
 } from "react-icons/fa";
-import DataSphere from "./DataSphere";
+import ErrorBoundary from "./ErrorBoundary";
 import { personalInfo } from "../data/portfolioData";
 
+const DataSphere = lazy(() => import("./DataSphere"));
+
+function DataSphereFallback() {
+  return (
+    <div className="data-sphere-fallback" role="img" aria-label="Abstract data sphere">
+      <div className="data-sphere-fallback-ring data-sphere-fallback-ring-one" />
+      <div className="data-sphere-fallback-ring data-sphere-fallback-ring-two" />
+      <div className="data-sphere-fallback-core">
+        <span>DATA</span>
+      </div>
+    </div>
+  );
+}
+
 function Hero() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section id="home" className="hero-section">
       <div className="hero-container">
@@ -117,11 +134,15 @@ function Hero() {
         >
           <div className="visual-glow" />
 
-          <DataSphere />
+          <ErrorBoundary fallback={<DataSphereFallback />}>
+            <Suspense fallback={<DataSphereFallback />}>
+              <DataSphere />
+            </Suspense>
+          </ErrorBoundary>
 
           <motion.div
             className="floating-card card-python"
-            animate={{ y: [0, -12, 0] }}
+            animate={prefersReducedMotion ? undefined : { y: [0, -12, 0] }}
             transition={{
               duration: 4,
               repeat: Infinity,
@@ -134,7 +155,7 @@ function Hero() {
 
           <motion.div
             className="floating-card card-powerbi"
-            animate={{ y: [0, 12, 0] }}
+            animate={prefersReducedMotion ? undefined : { y: [0, 12, 0] }}
             transition={{
               duration: 4.8,
               repeat: Infinity,
@@ -147,7 +168,7 @@ function Hero() {
 
           <motion.div
             className="floating-card card-sql"
-            animate={{ x: [0, 10, 0] }}
+            animate={prefersReducedMotion ? undefined : { x: [0, 10, 0] }}
             transition={{
               duration: 5.2,
               repeat: Infinity,

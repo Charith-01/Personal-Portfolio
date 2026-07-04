@@ -1,11 +1,13 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 function AnimatedBackground() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <div className="animated-background">
       <motion.div
         className="orb orb-one"
-        animate={{
+        animate={prefersReducedMotion ? undefined : {
           x: [0, 120, 0],
           y: [0, 80, 0],
           scale: [1, 1.2, 1],
@@ -19,7 +21,7 @@ function AnimatedBackground() {
 
       <motion.div
         className="orb orb-two"
-        animate={{
+        animate={prefersReducedMotion ? undefined : {
           x: [0, -100, 0],
           y: [0, -60, 0],
           scale: [1, 1.15, 1],
@@ -33,7 +35,7 @@ function AnimatedBackground() {
 
       <motion.div
         className="orb orb-three"
-        animate={{
+        animate={prefersReducedMotion ? undefined : {
           x: [0, 70, 0],
           y: [0, -100, 0],
           scale: [1, 1.25, 1],
