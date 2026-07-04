@@ -176,7 +176,7 @@ function DataSphere() {
     <div className="data-sphere-wrapper">
       <Canvas
         camera={{
-          position: [0, 0, 7],
+          position: [0, 0, isMobile ? 8 : 7],
           fov: 45,
         }}
         dpr={isMobile ? [0.75, 1] : [1, 1.6]}

@@ -4,6 +4,7 @@ import { ArrowUp } from "lucide-react";
 
 function BackToTop() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -12,6 +13,19 @@ function BackToTop() {
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const footer = document.querySelector(".contact-footer");
+    if (!footer) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsFooterVisible(entry.isIntersecting),
+      { threshold: 0.08 },
+    );
+
+    observer.observe(footer);
+    return () => observer.disconnect();
   }, []);
 
   const scrollToTop = () => {
@@ -26,7 +40,9 @@ function BackToTop() {
       {isVisible && (
         <motion.button
           type="button"
-          className="back-to-top"
+          className={`back-to-top${
+            isFooterVisible ? " back-to-top-footer" : ""
+          }`}
           onClick={scrollToTop}
           aria-label="Back to top"
           initial={{ opacity: 0, y: 15, scale: 0.9 }}
