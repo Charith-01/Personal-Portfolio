@@ -14,33 +14,19 @@ import {
 } from "lucide-react";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { personalInfo } from "../data/portfolioData";
+import {
+  revealContainer,
+  revealItem,
+  revealViewport,
+  subtleStagger,
+  subtleStaggerItem,
+} from "../utils/motion";
 
 const initialForm = {
   name: "",
   email: "",
   subject: "",
   message: "",
-};
-
-const revealContainer = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.11,
-    },
-  },
-};
-
-const revealItem = {
-  hidden: { opacity: 0, y: 28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.65,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
 };
 
 const contactMethods = [
@@ -148,7 +134,7 @@ function Contact() {
         variants={revealContainer}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
+        viewport={revealViewport}
       >
         <motion.div className="contact-intro" variants={revealItem}>
           <div className="contact-section-label">
@@ -174,7 +160,10 @@ function Contact() {
             </div>
           </div>
 
-          <div className="contact-methods">
+          <motion.div
+            className="contact-methods"
+            variants={subtleStagger}
+          >
             {contactMethods.map((method) => {
               const Icon = method.icon;
 
@@ -186,6 +175,7 @@ function Contact() {
                   rel={method.external ? "noreferrer" : undefined}
                   aria-label={`${method.label}: ${method.value}`}
                   className="contact-method-card"
+                  variants={subtleStaggerItem}
                   whileHover={{ y: -5 }}
                 >
                   <span className="contact-method-icon">
@@ -199,7 +189,7 @@ function Contact() {
                 </motion.a>
               );
             })}
-          </div>
+          </motion.div>
 
           <div className="contact-location">
             <MapPin size={16} />

@@ -1,12 +1,20 @@
 import { Mail } from "lucide-react";
+import { motion } from "framer-motion";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { navigationLinks, personalInfo } from "../data/portfolioData";
+import { footerReveal, revealViewport } from "../utils/motion";
 
 const currentYear = new Date().getFullYear();
 
 function Footer() {
   return (
-    <footer className="contact-footer">
+    <motion.footer
+      className="contact-footer"
+      variants={footerReveal}
+      initial="hidden"
+      whileInView="visible"
+      viewport={revealViewport}
+    >
       <div className="contact-footer-line" aria-hidden="true" />
 
       <div className="contact-footer-container">
@@ -54,7 +62,7 @@ function Footer() {
         <span>© {currentYear} {personalInfo.name}</span>
         <span>Data intelligence portfolio · Sri Lanka</span>
       </div>
-    </footer>
+    </motion.footer>
   );
 }
 

@@ -43,8 +43,8 @@ export const navigationLinks = [
     label: "Projects",
   },
   {
-    id: "education",
-    label: "Education",
+    id: "experience",
+    label: "Experience",
   },
   {
     id: "contact",
@@ -134,6 +134,29 @@ export const education = {
   ],
 };
 
+
+export const experiences = [
+  {
+    id: 1,
+    role: "Data Science Intern",
+    company: "Gamage Recruiters (Pvt) Ltd",
+    type: "Internship",
+    startDate: "June 2026",
+    endDate: "Present",
+    location: "Colombo, Western Province, Sri Lanka",
+    workMode: "Remote",
+    description:
+      "Started working as a Data Science Intern at Gamage Recruiters (Pvt) Ltd, where I contribute to real-world data-driven projects while gaining valuable industry experience and strengthening my skills in data analysis, machine learning, artificial intelligence, research, and problem-solving. Excited to learn, grow, and make meaningful contributions alongside an amazing team.",
+    logo: "/gamage-recruiters-logo.jpg",
+    skills: [
+      "Data Analysis",
+      "Machine Learning",
+      "Artificial Intelligence",
+      "Research",
+      "Problem Solving",
+    ],
+  },
+];
 export const projects = [
   {
     id: 1,

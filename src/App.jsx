@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, MotionConfig } from "framer-motion";
 import AnimatedBackground from "./components/AnimatedBackground";
 import About from "./components/About";
 import BackToTop from "./components/BackToTop";
 import Contact from "./components/Contact";
-import Education from "./components/Education";
+import Experience from "./components/Experience";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";
 import LoadingScreen from "./components/LoadingScreen";
@@ -18,7 +18,7 @@ function App() {
   const finishLoading = useCallback(() => setIsLoading(false), []);
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       <AnimatePresence>
         {isLoading && <LoadingScreen onComplete={finishLoading} />}
       </AnimatePresence>
@@ -32,13 +32,13 @@ function App() {
         <About />
         <Skills />
         <Projects />
-        <Education />
+        <Experience />
         <Contact />
       </main>
 
       <BackToTop />
       <Footer />
-    </>
+    </MotionConfig>
   );
 }
 

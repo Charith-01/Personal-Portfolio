@@ -12,6 +12,13 @@ import {
   Workflow,
 } from "lucide-react";
 import { education } from "../data/portfolioData";
+import {
+  revealContainer,
+  revealItem,
+  revealViewport,
+  subtleStagger,
+  subtleStaggerItem,
+} from "../utils/motion";
 
 const milestones = [
   {
@@ -64,27 +71,6 @@ const milestones = [
   },
 ];
 
-const revealContainer = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.12,
-    },
-  },
-};
-
-const revealItem = {
-  hidden: { opacity: 0, y: 28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.65,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
-
 function Education() {
   const [activeMilestoneId, setActiveMilestoneId] = useState(
     milestones[0].id,
@@ -105,7 +91,7 @@ function Education() {
         variants={revealContainer}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
+        viewport={revealViewport}
       >
         <motion.header className="education-heading" variants={revealItem}>
           <div className="education-section-label">
@@ -177,20 +163,20 @@ function Education() {
                 <small>{education.coursework.length} modules</small>
               </div>
 
-              <div className="education-coursework-list">
-                {education.coursework.map((course, index) => (
+              <motion.div
+                className="education-coursework-list"
+                variants={subtleStagger}
+              >
+                {education.coursework.map((course) => (
                   <motion.span
                     key={course}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.2 + index * 0.055 }}
+                    variants={subtleStaggerItem}
                     whileHover={{ y: -3, rotate: -0.5 }}
                   >
                     {course}
                   </motion.span>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </motion.article>
 

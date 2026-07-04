@@ -10,27 +10,11 @@ import {
 } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import { projects } from "../data/portfolioData";
-
-const revealContainer = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.12,
-    },
-  },
-};
-
-const revealItem = {
-  hidden: { opacity: 0, y: 28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.65,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
+import {
+  revealContainer,
+  revealItem,
+  revealViewport,
+} from "../utils/motion";
 
 function PipelinePreview() {
   return (
@@ -209,7 +193,7 @@ function Projects() {
         variants={revealContainer}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
+        viewport={revealViewport}
       >
         <motion.header className="projects-heading" variants={revealItem}>
           <div className="projects-section-label">

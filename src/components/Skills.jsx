@@ -1,158 +1,70 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  BarChart3,
-  ChartNoAxesCombined,
-  Code2,
-  Database,
-  MonitorCog,
-  Workflow,
-  Wrench,
-} from "lucide-react";
-import { skills as portfolioSkills } from "../data/portfolioData";
+import { SiGit, SiNumpy, SiPandas, SiPython, SiR, SiReact } from "react-icons/si";
+import { revealContainer, revealItem, revealViewport } from "../utils/motion";
 
-const skillCategories = [
-  {
-    id: "programming",
-    label: "Programming Languages",
-    coreLabel: "Programming",
-    icon: Code2,
-  },
-  {
-    id: "dataAnalysis",
-    label: "Data Analysis",
-    coreLabel: "Data Analysis",
-    icon: ChartNoAxesCombined,
-  },
-  {
-    id: "visualization",
-    label: "Data Visualization & BI",
-    coreLabel: "Visualization & BI",
-    icon: BarChart3,
-  },
-  {
-    id: "databases",
-    label: "Databases",
-    coreLabel: "Databases",
-    icon: Database,
-  },
-  {
-    id: "dataEngineering",
-    label: "Data Engineering",
-    coreLabel: "Data Engineering",
-    icon: Workflow,
-  },
-  {
-    id: "webDevelopment",
-    label: "Web Development",
-    coreLabel: "Web Development",
-    icon: MonitorCog,
-  },
-  {
-    id: "tools",
-    label: "Tools",
-    coreLabel: "Tools",
-    icon: Wrench,
-  },
+const categories = [
+  { id: "all", label: "All" },
+  { id: "programming", label: "Programming" },
+  { id: "analysis", label: "Data Analysis" },
+  { id: "bi", label: "BI & Visualization" },
+  { id: "databases", label: "Databases" },
+  { id: "engineering", label: "Data Engineering" },
+  { id: "tools", label: "Development Tools" },
 ];
 
-const summaryItems = [
-  {
-    label: "Primary Focus",
-    value: "Data Analytics & BI",
-  },
-  {
-    label: "Strong Foundation",
-    value: "Python, SQL, Power BI",
-  },
-  {
-    label: "Expanding Into",
-    value: "Data Engineering & Dimensional Modeling",
-  },
+const technologies = [
+  { name: "Python", category: "programming", icon: SiPython, color: "#facc15" },
+  { name: "SQL", category: "programming", symbol: "sql", color: "#67e8f9" },
+  { name: "Power BI", category: "bi", symbol: "power-bi", color: "#facc15" },
+  { name: "Pandas", category: "analysis", icon: SiPandas, color: "#c4b5fd" },
+  { name: "NumPy", category: "analysis", icon: SiNumpy, color: "#67e8f9" },
+  { name: "R", category: "programming", icon: SiR, color: "#60a5fa" },
+  { name: "SQL Server", category: "databases", symbol: "sql-server", color: "#fb7185" },
+  { name: "Git", category: "tools", icon: SiGit, color: "#fb7185" },
+  { name: "React", category: "tools", icon: SiReact, color: "#67e8f9" },
+  { name: "ETL", category: "engineering", symbol: "etl", color: "#22d3ee" },
 ];
 
-const sectionVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.12,
-    },
-  },
-};
-
-const revealVariant = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.65,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
-
-const chipContainerVariants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.055,
-      delayChildren: 0.08,
-    },
-  },
-  exit: {
-    transition: {
-      staggerChildren: 0.025,
-      staggerDirection: -1,
-    },
-  },
-};
-
-const chipVariants = {
-  hidden: { opacity: 0, scale: 0.72 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.38, ease: "easeOut" },
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.78,
-    transition: { duration: 0.18 },
-  },
-};
-
-function getOrbitPosition(index, total) {
-  if (total <= 7) {
-    return {
-      angle: -90 + (360 / total) * index,
-      radius: total <= 4 ? 205 : 220,
-    };
+function TechnologySymbol({ type }) {
+  if (type === "power-bi") {
+    return (
+      <svg className="skills-symbol skills-symbol-fill" viewBox="0 0 48 48" aria-hidden="true">
+        <rect x="7" y="25" width="6" height="15" rx="2" />
+        <rect x="17" y="17" width="6" height="23" rx="2" />
+        <rect x="27" y="10" width="6" height="30" rx="2" />
+        <rect x="37" y="5" width="6" height="35" rx="2" />
+      </svg>
+    );
   }
 
-  const outerCount = Math.ceil(total / 2);
-  const isInnerRing = index >= outerCount;
-  const ringIndex = isInnerRing ? index - outerCount : index;
-  const ringTotal = isInnerRing ? total - outerCount : outerCount;
+  if (type === "etl") {
+    return (
+      <svg className="skills-symbol skills-symbol-line" viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="8" cy="24" r="5" />
+        <circle cx="40" cy="10" r="5" />
+        <circle cx="40" cy="38" r="5" />
+        <path d="M14 24h9m0 0 7-14m-7 14 7 14" />
+        <path d="m20 20 4 4-4 4" />
+      </svg>
+    );
+  }
 
-  return {
-    angle:
-      (isInnerRing ? -45 : -90) +
-      (360 / ringTotal) * ringIndex,
-    radius: isInnerRing ? 148 : 222,
-  };
+  return (
+    <svg className="skills-symbol skills-symbol-line" viewBox="0 0 48 48" aria-hidden="true">
+      <ellipse cx="24" cy="9" rx="15" ry="6" />
+      <path d="M9 9v12c0 3.3 6.7 6 15 6s15-2.7 15-6V9" />
+      <path d="M9 21v12c0 3.3 6.7 6 15 6s15-2.7 15-6V21" />
+      {type === "sql-server" && <path d="M18 17h12M18 31h12" />}
+    </svg>
+  );
 }
 
 function Skills() {
-  const [activeCategoryId, setActiveCategoryId] = useState(
-    skillCategories[0].id,
+  const [activeCategory, setActiveCategory] = useState("all");
+  const visibleTechnologies = technologies.filter(
+    (technology) => activeCategory === "all" || technology.category === activeCategory,
   );
-
-  const activeCategory = skillCategories.find(
-    (category) => category.id === activeCategoryId,
-  );
-  const activeSkills = portfolioSkills[activeCategoryId];
-  const ActiveIcon = activeCategory.icon;
 
   return (
     <section id="skills" className="skills-section">
@@ -160,139 +72,71 @@ function Skills() {
 
       <motion.div
         className="skills-container"
-        variants={sectionVariants}
+        variants={revealContainer}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.12 }}
+        viewport={revealViewport}
       >
-        <motion.div className="skills-intro" variants={revealVariant}>
+        <motion.header className="skills-intro" variants={revealItem}>
           <div className="skills-section-label">
             <span>03</span>
-            Technical universe
+            Technical Universe
           </div>
-
           <h2 className="skills-title">
-            A connected stack for
-            <span> data-driven systems.</span>
+            Tools I use to build <span>data-driven experiences.</span>
           </h2>
-
           <p className="skills-description">
-            Explore the technologies I use across analysis, business
-            intelligence, data engineering, and application development.
-            Select a category to navigate the universe.
+            A focused toolkit for data analysis, business intelligence,
+            databases, and data engineering—from raw information to clear,
+            useful experiences.
           </p>
+        </motion.header>
 
-          <div
-            className="skills-category-list"
-            aria-label="Skill categories"
-          >
-            {skillCategories.map((category) => {
-              const Icon = category.icon;
-              const isActive = category.id === activeCategoryId;
-
-              return (
-                <motion.button
-                  key={category.id}
-                  type="button"
-                  className={`skills-category-button${
-                    isActive ? " skills-category-button-active" : ""
-                  }`}
-                  onClick={() => setActiveCategoryId(category.id)}
-                  aria-pressed={isActive}
-                  whileHover={{ x: 4 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <span className="skills-category-icon">
-                    <Icon size={17} />
-                  </span>
-                  <span>{category.label}</span>
-                  <small>{portfolioSkills[category.id].length}</small>
-                </motion.button>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        <motion.div className="skills-universe" variants={revealVariant}>
-          <div className="skills-universe-topline">
-            <span>Technology constellation</span>
-            <span>{String(activeSkills.length).padStart(2, "0")} nodes</span>
-          </div>
-
-          <div className="skills-universe-stage">
-            <div className="skills-orbit skills-orbit-outer" aria-hidden="true" />
-            <div className="skills-orbit skills-orbit-inner" aria-hidden="true" />
-
-            <motion.div
-              className="skills-data-core"
-              key={activeCategory.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.42 }}
-            >
-              <div className="skills-core-surface">
-                <ActiveIcon size={28} />
-                <span>Data Core</span>
-                <strong>{activeCategory.coreLabel}</strong>
-              </div>
-            </motion.div>
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeCategory.id}
-                className="skills-chip-layer"
-                variants={chipContainerVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
+        <motion.div className="skills-explorer" variants={revealItem}>
+          <div className="skills-filter-wrap" aria-label="Technology categories">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                type="button"
+                className={`skills-filter${activeCategory === category.id ? " skills-filter-active" : ""}`}
+                onClick={() => setActiveCategory(category.id)}
+                aria-pressed={activeCategory === category.id}
               >
-                {activeSkills.map((skill, index) => {
-                  const position = getOrbitPosition(
-                    index,
-                    activeSkills.length,
-                  );
-
-                  return (
-                    <div
-                      className="skills-chip-position"
-                      key={skill}
-                      style={{
-                        "--skills-angle": `${position.angle}deg`,
-                        "--skills-radius": `${position.radius}px`,
-                      }}
-                    >
-                      <div className="skills-chip-counter">
-                        <motion.div
-                          className="skills-chip"
-                          variants={chipVariants}
-                          whileHover={{ y: -6, scale: 1.04, rotate: -1 }}
-                        >
-                          <span />
-                          {skill}
-                        </motion.div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </motion.div>
-            </AnimatePresence>
+                {category.label}
+              </button>
+            ))}
           </div>
-        </motion.div>
 
-        <motion.div className="skills-summary" variants={revealVariant}>
-          {summaryItems.map((item, index) => (
-            <motion.div
-              className="skills-summary-item"
-              key={item.label}
-              whileHover={{ y: -4 }}
-            >
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <small>{item.label}</small>
-                <strong>{item.value}</strong>
-              </div>
-            </motion.div>
-          ))}
+          <div className="skills-grid-glow" aria-hidden="true" />
+          <motion.div className={`skills-icon-grid skills-icon-grid-${visibleTechnologies.length}`} layout role="list" aria-live="polite">
+            <AnimatePresence mode="popLayout">
+              {visibleTechnologies.map((technology) => {
+                const Icon = technology.icon;
+                return (
+                  <motion.div
+                    key={technology.name}
+                    className="skills-icon-item"
+                    style={{ "--skills-tech-color": technology.color }}
+                    layout
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.28, ease: "easeOut" }}
+                    whileHover={{ y: -5, scale: 1.04 }}
+                    role="listitem"
+                    tabIndex={0}
+                    title={technology.name}
+                    aria-label={technology.name}
+                  >
+                    <span className="skills-standalone-icon">
+                      {technology.symbol ? <TechnologySymbol type={technology.symbol} /> : <Icon aria-hidden="true" />}
+                    </span>
+                    <span className="skills-icon-label">{technology.name}</span>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
         </motion.div>
       </motion.div>
     </section>
